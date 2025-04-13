@@ -21,6 +21,7 @@
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
+              "src/assets",
               {
                 "glob": "**/*",
                 "input": "public"
@@ -28,7 +29,8 @@
             ],
             "styles": [
               "src/shared/core.css",
-              "node_modules/@fortawesome/fontawesome-free/css/all.min.css"
+              "node_modules/@fortawesome/fontawesome-free/css/all.min.css",
+              "node_modules/admin-lte/dist/css/adminlte.min.css"
             ],
             "scripts": [
               "src/assets/js/web-app-event.js"
