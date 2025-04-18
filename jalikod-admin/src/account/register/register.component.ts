@@ -1,11 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { accountModuleImports } from '../account-module';
+import { appModuleAnimation } from '../../shared/animations/router-transition';
 
 @Component({
   selector: 'app-register',
-  imports: [],
+  imports: [...accountModuleImports],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.css'
+  styleUrl: './register.component.css',
+  animations:[appModuleAnimation()]
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit {
+
+  constructor() {
+  }
+
+  ngOnInit(): void {
+  }
 
 }

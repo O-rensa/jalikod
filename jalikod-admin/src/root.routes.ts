@@ -11,7 +11,7 @@ export const ROOTROUTES: Routes = [
   },
   {
     path: "",
-    redirectTo: "app",
+    redirectTo: "account",
     pathMatch: "full"
   },
   {

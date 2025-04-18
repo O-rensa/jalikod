@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Renderer2 } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./layout/header.component";
 import { SidebarComponent } from "./layout/sidebar.component";
@@ -8,5 +8,12 @@ import { SidebarComponent } from "./layout/sidebar.component";
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+
+  constructor(private readonly renderer: Renderer2) {
+  }
+
+  ngOnInit(): void {
+    this.renderer.addClass(document.body, "sidebar-mini");
+  }
 }
