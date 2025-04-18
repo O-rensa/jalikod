@@ -2,74 +2,111 @@
     <h4 class="text-center mb-3">
         Register
     </h4>
-    <form autocomplete="off" #registerForm="ngForm">
+    <p *ngIf="showUsernameAlreadyExists">
+        <span class="invalid-feedback" [class.d-block]="showUsernameAlreadyExists">
+            &middot; Username already exists
+        </span>
+    </p>
+    <p *ngIf="showNotAllowedCharacters">
+        <span class="invalid-feedback" [class.d-block]="showNotAllowedCharacters">
+            &middot; Username or Password has not allowed characters 
+        </span>
+    </p>
+    <form autocomplete="off" #registerForm="ngForm" (ngSubmit)="registerUser()">
         <div class="form-group">
             <div class="input-group">
                 <input type="text" class="form-control" name="firstName" maxlength="100" placeholder="First Name"
-                    required>
+                    [(ngModel)]="fName" #fNameCtrl="ngModel" #fNameEl required>
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-arrow-left"></span>
                     </div>
                 </div>
+                <app-input-validator [control]="fNameCtrl" [controlEl]="fNameEl"></app-input-validator>
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
-                <input type="text" class="form-control" name="middleInitial" maxlength="5" placeholder="Middle Initial">
+                <input type="text" class="form-control" name="middleInitial" maxlength="10" placeholder="Middle Initial"
+                [(ngModel)]="mName" #mNameCtrl="ngModel" #mNameEl>
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-arrow-left"></span>
                     </div>
                 </div>
+                <app-input-validator [control]="mNameCtrl" [controlEl]="mNameEl"></app-input-validator>
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
                 <input type="text" class="form-control" name="lastName" maxlength="100" placeholder="Last Name"
-                    required>
+                    [(ngModel)]="sName" required #sNameCtrl="ngModel" #sNameEl>
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-arrow-left"></span>
                     </div>
                 </div>
+                <app-input-validator [control]="sNameCtrl" [controlEl]="sNameEl"></app-input-validator>
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
-                <input type="text" class="form-control" name="nameExtension" maxlength="10" placeholder="Extension">
+                <input type="text" class="form-control" name="nameExtension" maxlength="10" placeholder="Extension"
+                    [(ngModel)]="extension" #nameExtensionCtrl="ngModel" #nameExtensionEl>
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-arrow-left"></span>
                     </div>
                 </div>
+                <app-input-validator [control]="nameExtensionCtrl" [controlEl]="nameExtensionEl"></app-input-validator>
             </div>
         </div>
         <div class="form-group">
             <div class="input-group">
                 <input type="text" class="form-control" name="username" maxlength="255" placeholder="Username"
-                    required>
+                    [(ngModel)]="username" (ngModelChange)="checkForNotAllowedCharacters($event)" autocomplete="username" 
+                    required #usernameCtrl="ngModel" #usernameEl>
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-user"></span>
                     </div>
                 </div>
             </div>
+            <app-input-validator [control]="usernameCtrl" [controlEl]="usernameEl"></app-input-validator>
         </div>
         <div class="form-group">
             <div class="input-group">
-                <input type="text" class="form-control" name="password" maxlength="25" placeholder="Password"
-                    required>
+                <input type="password" class="form-control" name="password" maxlength="25" placeholder="Password"
+                    minlength="6" [(ngModel)]="password" autocomplete="new-password" required #passwordCtrl="ngModel"
+                    #passwordEl>
                 <div class="input-group-append">
                     <div class="input-group-text">
                         <span class="fas fa-lock"></span>
                     </div>
                 </div>
+                <app-input-validator [control]="passwordCtrl" [controlEl]="passwordEl"></app-input-validator>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <input type="password" class="form-control" name="password" maxlength="25" placeholder="Confirm Password"
+                    [(ngModel)]="confirmPassword" (ngModelChange)="checkIfPasswordMatches()" min="6" 
+                    autocomplete="new-password" required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-times" *ngIf="!passwordMatched"></span>
+                        <span class="fas fa-check" *ngIf="passwordMatched"></span>
+                    </div>
+                </div>
+                <span *ngIf="!passwordMatched && !!confirmPassword" class="invalid-feedback" [class.d-block]="!passwordMatched">
+                    Password and Confirm Password do not match
+                </span>
             </div>
         </div>
         <div class="form-group row">
             <div class="col-md-4">
-                <button type="submit" class="btn btn-primary btn-block" [disabled]="registerForm.form.invalid">
+                <button type="submit" class="btn btn-primary btn-block" 
+                    [disabled]="registerForm.form.invalid || disableRegisterButton">
                     Register
                 </button>
             </div>

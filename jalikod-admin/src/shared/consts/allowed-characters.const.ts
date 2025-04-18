@@ -1,0 +1,1 @@
+export const allowedCharactersPattern = /^[a-zA-Z0-9_-]+$/;
