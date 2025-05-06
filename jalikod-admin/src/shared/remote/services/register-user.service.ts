@@ -7,13 +7,15 @@ import { RegisterRequest, RegisterResponse } from "../models/register-user.model
   providedIn: "root"
 })
 export class RegisterUserService extends BaseRemoteService {
-  private readonly serviceUrl: string = this.baseUrl + "/register";
+  private readonly serviceUrl: string = this.baseUrl + "/auth/register";
+  public request: RegisterRequest = new RegisterRequest();
 
   constructor() {
     super();
   }
 
-  registerUser(payload: RegisterRequest): Observable<RegisterResponse> {
+  registerUser(): Observable<RegisterResponse> {
+    const payload = this.request;
     return this.httpClient.post<RegisterResponse>(this.serviceUrl, payload);
   }
 }

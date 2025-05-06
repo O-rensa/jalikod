@@ -28,11 +28,13 @@ export class RegisterRequest implements IRegisterRequest {
 export interface IRegisterResponse {
   status: "success" | "fail";
   failMessage: RegisterFailureEnum[];
+  errorMessage?: string;
 }
 
 export class RegisterResponse implements IRegisterResponse {
   status: "success" | "fail";
   failMessage: RegisterFailureEnum[];
+  errorMessage?: string;
 
   constructor() {
     this.status = "success";

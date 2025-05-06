@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { accountModuleImports } from '../account-module';
 import { appModuleAnimation } from '../../shared/animations/router-transition';
-import { allowedCharactersPattern } from '../../shared/consts/allowed-characters.const';
+import { allowedPasswordPattern, allowedUsernamePattern } from '../../shared/consts/allowed-characters.const';
 import * as _ from "lodash";
 import { InputValidatorComponent } from "../../shared/components/input-validator/input-validator.component";
+import { RegisterUserService } from '../../shared/remote/services/register-user.service';
+import { RegisterRequest } from '../../shared/remote/models/register-user.model';
 
 @Component({
   selector: 'app-register',
@@ -17,25 +19,24 @@ export class RegisterComponent implements OnInit {
   showNotAllowedCharacters: boolean = false;
   disableRegisterButton: boolean = false;
   passwordMatched: boolean = false;
-  fName: string = "";
-  mName?: string;
-  sName: string = "";
-  extension?: string;
-  username: string = "";
-  password: string = "";
   confirmPassword: string = "";
 
-  constructor() {
+  constructor(private readonly registerService: RegisterUserService) {
   }
 
   ngOnInit(): void {
   }
 
-  checkForNotAllowedCharacters(value: string): void {
-    if (!_.isEmpty(value)) {
-      const isAllowed = allowedCharactersPattern.test(value);
-      this.showNotAllowedCharacters = !isAllowed;
-      this.disableRegisterButton = !isAllowed;
+  get request(): RegisterRequest {
+    return this.registerService.request
+  }
+
+  checkForNotAllowedCharacters(): void {
+    if (!_.isEmpty(this.request.username) || !_.isEmpty(this.request.password)) {
+      const usernameIsAllowed = !!this.request.username ? allowedUsernamePattern.test(this.request.username) : true;
+      const passwordIsAllowed = !!this.request.password ? allowedPasswordPattern.test(this.request.password) : true;
+      this.showNotAllowedCharacters = !(usernameIsAllowed && passwordIsAllowed);
+      this.disableRegisterButton = !(usernameIsAllowed && passwordIsAllowed);
     } else {
       this.showNotAllowedCharacters = false;
       this.disableRegisterButton = false;
@@ -43,11 +44,16 @@ export class RegisterComponent implements OnInit {
   }
 
   checkIfPasswordMatches(): void {
-    const isMatched: boolean = this.password === this.confirmPassword;
+    const isMatched: boolean = this.request.password === this.confirmPassword;
     this.disableRegisterButton = !isMatched;
     this.passwordMatched = isMatched;
   }
 
   registerUser(): void {
+    if (this.disableRegisterButton) return;
+    this.registerService.registerUser()
+      .subscribe((response) => {
+        console.log(response);
+      })
   }
 }
